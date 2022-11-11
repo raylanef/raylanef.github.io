@@ -1,0 +1,112 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+
+<body>
+    Digite a conta: <input type="text" id="input-conta-corrente">
+    <br>
+    Digite a agencia: <input type="text" id="input-agencia">
+    <button onclick="descobreDigitoVerificadorConta()">Verificar</button>
+    <div id="div"></div>
+
+</body>
+<script>
+    function descobreDigitoVerificadorConta() {
+        let contaCorrente = document.getElementById("input-conta-corrente").value;
+        let agencia = document.getElementById("input-agencia").value;
+        let arrayConta = contaCorrente.split("");
+        let arrayAgencia = agencia.split("")
+        let digitoVerificador;
+
+        console.log(arrayConta);
+
+        if (arrayConta.length == 7) {
+            digitoVerificador = verificaDigitoBradesco(arrayConta);
+        }
+
+
+        //digitoVerificador = verificaDigitoBancoBrasil(arrayConta);
+        digitoVerificador = verificaDigitoCaixa(arrayConta, arrayAgencia);
+
+
+        div.innerHTML = digitoVerificador;
+
+    }
+
+    function verificaDigitoBradesco(arrayConta) {
+        let somaTotal = 0;
+        if (arrayConta.length < 7) {
+            for (i = 7 - arrayConta.length; i > 0; i--) {
+                arrayConta.unshift(0);
+            }
+            console.log("CONTA JOHN")
+            console.log(arrayConta)
+        }
+        let arrayMultiplicadores = [3, 2, 7, 6, 5, 4, 3, 2];
+        for (i = 0; i < arrayConta.length; i++) {
+            somaTotal += parseInt(arrayConta[i]) * arrayMultiplicadores[i];
+        }
+
+        let valorFinal = 11 - (somaTotal % 11);
+        if (valorFinal == 0) return 0;
+        if (valorFinal == 1) return "P";
+        return valorFinal;
+    }
+
+    function verificaDigitoBancoBrasil(arrayConta) {
+        let somaTotal = 0;
+        let arrayMultiplicadores = [9, 8, 7, 6, 5, 4, 3, 2];
+        if (arrayConta.length < 8) {
+            for (i = 8 - arrayConta.length; i > 0; i--) {
+                arrayConta.unshift(0);
+            }
+            console.log("CONTA JOHN")
+            console.log(arrayConta)
+        }
+
+        for (i = 0; i < arrayConta.length; i++) {
+            somaTotal += parseInt(arrayConta[i]) * arrayMultiplicadores[i];
+        }
+
+        let valorFinal = 11 - (somaTotal % 11);
+        if (valorFinal == 10) return 0;
+        if (valorFinal == 11) return "X";
+        return valorFinal;
+    }
+
+    function verificaDigitoCaixa(arrayConta, arrayAgencia) {
+        let somaTotal = 0;
+        let arrayMultiplicadores = [8, 7, 6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
+
+        if (arrayConta.length < 11) {
+            for (i = 11 - arrayConta.length; i > 0; i--) {
+                arrayConta.unshift(0);
+            }
+        }
+
+        let arrayFinal = arrayAgencia.concat(arrayConta);
+
+        for (i = 0; i < arrayFinal.length; i++) {
+            somaTotal += parseInt(arrayFinal[i]) * arrayMultiplicadores[i];
+        }
+
+        let somaFinal = (somaTotal * 10);
+        let modulo = parseInt((somaFinal / 11),10) * 11;
+        let valorFinal = somaFinal - modulo;
+        if (valorFinal == 10) return 0;
+        return valorFinal;
+    }
+
+    function verificaDigitoItau(arrayConta,arrayAgencia){
+        
+
+    }
+</script>
+
+</html>

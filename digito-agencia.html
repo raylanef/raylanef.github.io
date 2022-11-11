@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verificador</title>
+</head>
+
+<body>
+    
+    <select name="banco" id="select-banco">
+        <option value=""> Selecione o banco...</option>
+        <option value="1">Banco do Brasil</option>
+        <option value="2">Bradesco</option>
+    </select>
+    <br>
+    Digite a conta: <input type="text" id="input-agencia">
+    <button onclick="descobreDigitoVerificadorAgencia()">Verificar</button>
+    <div id="div"></div>
+
+</body>
+<script>
+    function descobreDigitoVerificadorAgencia() {
+        let agencia = document.getElementById("input-agencia").value;
+        let selectBox = document.getElementById("select-banco").value; 
+        let arrayAgencia = agencia.split("");
+        let agenciaValida = arrayAgencia.length == 4;
+        let digitoVerificador;
+       
+        if (agenciaValida) {
+            let mod = calculoDigitoVerificador(arrayAgencia);
+            if (selectBox == 1) {
+                digitoVerificador = digitoVerificadorBB(mod);
+            }
+
+            digitoVerificador = digitoVerificadorBradesco(mod);
+
+            return div.innerHTML = digitoVerificador;
+        }
+
+        return alert("Verifique o campo agência")
+    }
+
+    function calculoDigitoVerificador(arrayAgencia) {
+        let somaTotal = 0;
+        let aux = 0;
+        for (i = 5; i > 1; i--) {
+            somaTotal += parseInt(arrayAgencia[aux++]) * i;
+        }
+
+        return 11 - (somaTotal % 11);
+    }
+
+    function digitoVerificadorBradesco(mod) {
+        if (mod == 10) {
+            return "P";
+        }
+        if (mod == 11) {
+            return 0;
+        }
+        return mod;
+    }
+
+    function digitoVerificadorBB(mod) {
+        if (mod == 10) {
+            return "X";
+        }
+        if (mod == 0) {
+            return 0;
+        }
+        return mod;
+    }
+</script>
+
+</html>

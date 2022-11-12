@@ -21,10 +21,9 @@
         let contaCorrente = document.getElementById("input-conta-corrente").value;
         let agencia = document.getElementById("input-agencia").value;
         let arrayConta = contaCorrente.split("");
-        let arrayAgencia = agencia.split("")
+        let arrayAgencia = agencia.split("");
         let digitoVerificador;
 
-        console.log(arrayConta);
 
         if (arrayConta.length == 7) {
             digitoVerificador = verificaDigitoBradesco(arrayConta);
@@ -32,7 +31,8 @@
 
 
         //digitoVerificador = verificaDigitoBancoBrasil(arrayConta);
-        digitoVerificador = verificaDigitoCaixa(arrayConta, arrayAgencia);
+        // digitoVerificador = verificaDigitoCaixa(arrayConta, arrayAgencia);
+        digitoVerificador = verificaDigitoItau(arrayConta, arrayAgencia);
 
 
         div.innerHTML = digitoVerificador;
@@ -66,8 +66,6 @@
             for (i = 8 - arrayConta.length; i > 0; i--) {
                 arrayConta.unshift(0);
             }
-            console.log("CONTA JOHN")
-            console.log(arrayConta)
         }
 
         for (i = 0; i < arrayConta.length; i++) {
@@ -104,8 +102,33 @@
     }
 
     function verificaDigitoItau(arrayConta,arrayAgencia){
-        
+        let somaTotal = 0;
+        let arrayMultiplicadores = [2,1,2,1,2,1,2,1,2];
 
+        if (arrayConta.length < 5) {
+            for (i = 5 - arrayConta.length; i > 0; i--) {
+                arrayConta.unshift(0);
+            }
+        }
+
+        let arrayFinal = arrayAgencia.concat(arrayConta);
+
+        for (i = 0; i < arrayFinal.length; i++) {
+            let numero = parseInt(arrayFinal[i]) * arrayMultiplicadores[i];
+            console.log(numero) ;
+             somaTotal += numero > 9 ? splitInteiro(numero) : numero;
+                    
+        }
+
+        let valorFinal = 10 - (somaTotal % 10);
+
+        if (valorFinal == 10) return 0;
+        return valorFinal;
+
+    }
+    
+    function splitInteiro(numero){
+      return parseInt((numero/10),10) + numero%10;
     }
 </script>
 

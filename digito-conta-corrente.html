@@ -66,7 +66,7 @@
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                           <!-- <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>-->
+                            <!-- <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>-->
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body" id="div">
@@ -117,54 +117,36 @@
     }
 
     function verificaDigitoBradesco(arrayConta) {
-        let somaTotal = 0;
-        if (arrayConta.length < 7) {
-            for (i = 7 - arrayConta.length; i > 0; i--) {
-                arrayConta.unshift(0);
-            }
-        }
+        arrayConta = arrayConta.length < 8 ?
+            adicionaNumerosNaConta(8, arrayConta) : arrayConta;
+        console.log(arrayConta);
         let arrayMultiplicadores = [3, 2, 7, 6, 5, 4, 3, 2];
-        for (i = 0; i < arrayConta.length; i++) {
-            somaTotal += parseInt(arrayConta[i]) * arrayMultiplicadores[i];
-        }
-
-        let valorFinal = 11 - (somaTotal % 11);
-        if (valorFinal == 0) return 0;
-        if (valorFinal == 1) return "P";
-        return valorFinal;
+        let somaTotal = somaNumeros(arrayConta, arrayMultiplicadores);
+        console.log("Soma total: " + somaTotal);
+        let modulo = (somaTotal % 11);
+        if (modulo == 0) return 0;
+        if (modulo == 1) return "P";
+        return (11 - modulo);
     }
 
     function verificaDigitoBancoBrasil(arrayConta) {
-        let somaTotal = 0;
         let arrayMultiplicadores = [9, 8, 7, 6, 5, 4, 3, 2];
-        if (arrayConta.length < 8) {
-            for (i = 8 - arrayConta.length; i > 0; i--) {
-                arrayConta.unshift(0);
-            }
-        }
-
-        for (i = 0; i < arrayConta.length; i++) {
-            somaTotal += parseInt(arrayConta[i]) * arrayMultiplicadores[i];
-        }
-
-        let valorFinal = 11 - (somaTotal % 11);
-        if (valorFinal == 10) return 0;
-        if (valorFinal == 11) return "X";
-        return valorFinal;
+        arrayConta = arrayConta.length < 8 ?
+            adicionaNumerosNaConta(8, arrayConta) : arrayConta;
+        let somaTotal = somaNumeros(arrayConta, arrayMultiplicadores);
+        let modulo = 11 - (somaTotal % 11);
+        if (modulo == 10) return 0;
+        if (modulo == 11) return "X";
+        return modulo;
     }
 
     function verificaDigitoCaixa(arrayConta, arrayAgencia) {
-        let somaTotal = 0;
         let arrayMultiplicadores = [8, 7, 6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
-
-        arrayConta = arrayConta.length < 8 ? adicionaNumerosNaConta(8, arrayConta) : arrayConta;
-
+        arrayConta = arrayConta.length < 11 ?
+            adicionaNumerosNaConta(11, arrayConta) : arrayConta;
         let arrayFinal = arrayAgencia.concat(arrayConta);
 
-        for (i = 0; i < arrayFinal.length; i++) {
-            somaTotal += parseInt(arrayFinal[i]) * arrayMultiplicadores[i];
-        }
-
+        let somaTotal = somaNumeros(arrayFinal, arrayMultiplicadores);
         let somaFinal = (somaTotal * 10);
         let modulo = parseInt((somaFinal / 11), 10) * 11;
         let valorFinal = somaFinal - modulo;
@@ -175,46 +157,50 @@
     function verificaDigitoItau(arrayConta, arrayAgencia) {
         let somaTotal = 0;
         let arrayMultiplicadores = [2, 1, 2, 1, 2, 1, 2, 1, 2];
-
-        if (arrayConta.length < 5) {
-            for (i = 5 - arrayConta.length; i > 0; i--) {
-                arrayConta.unshift(0);
-            }
-        }
-
+        arrayConta = arrayConta.length < 5 ?
+            adicionaNumerosNaConta(5, arrayConta) : arrayConta;
         let arrayFinal = arrayAgencia.concat(arrayConta);
-
         for (i = 0; i < arrayFinal.length; i++) {
             let numero = parseInt(arrayFinal[i]) * arrayMultiplicadores[i];
             console.log(numero);
             somaTotal += numero > 9 ? splitInteiro(numero) : numero;
 
         }
-
         let valorFinal = 10 - (somaTotal % 10);
-
         if (valorFinal == 10) return 0;
         return valorFinal;
 
     }
 
+
     function splitInteiro(numero) {
         return parseInt((numero / 10), 10) + numero % 10;
     }
 
-    function apagaPosicaoVazia(array){
+    function apagaPosicaoVazia(array) {
         let posicaoVazia = " ";
         let indice = array.indexOf(posicaoVazia);
-        while(indice >= 0){
-            array.splice(indice,1);
+        while (indice >= 0) {
+            array.splice(indice, 1);
             indice = array.indexOf(posicaoVazia);
         }
     }
 
-    function adicionaNumerosNaConta(qtdNumerosConta, arrayConta){   
-            for (i = qtdNumerosConta - arrayConta.length; i > 0; i--) {
-                arrayConta.unshift(0);
-            }
+    function adicionaNumerosNaConta(qtdNumerosConta, arrayConta) {
+        for (i = qtdNumerosConta - arrayConta.length; i > 0; i--) {
+            arrayConta.unshift(0);
+        }
+        console.log("Passou no adiciona: " + arrayConta);
+        return arrayConta;
+    }
+
+    function somaNumeros(arrayFinal, arrayMultiplicadores) {
+        let soma = 0;
+        for (i = 0; i < arrayFinal.length; i++) {
+            soma += parseInt(arrayFinal[i]) * arrayMultiplicadores[i];
+            console.log(soma)
+        }
+        return soma;
     }
 </script>
 

@@ -36,16 +36,19 @@
         </ul>
         <div class="container col-8 mt-4">
             <select class="form-select" id="select-banco" aria-label="Default select example">
-                <option selected>Selecione o banco</option>
-                <option value="1">Banco do Brasil</option>
+                <option selected value="0">Selecione o banco</option>
+                <option value="1">
+                    <img src="./image.svg" style="width:30px;height:30px;margin-right:5px;" /> Banco do Brasil</option>
                 <option value="2">Bradesco</option>
                 <option value="3">Caixa Econômica</option>
                 <option value="4">Itaú</option>
             </select>
             <div class="row g-2 mt-4">
+                <div class="alert alert-danger" id="alerta-agencia" role="alert" style="display: none;">
+                </div>
                 <div class="col-md">
                     <div class="form-floating">
-                        <input type="text" class="form-control" id="input-agencia">
+                        <input type="text"  class="form-control" id="input-agencia">
                         <label for="floatingInputGrid">Agência</label>
                     </div>
                 </div>
@@ -57,25 +60,9 @@
                 </div>
             </div>
             <div class="d-grid gap-2 col-12 mx-auto mt-4">
-                <button type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="btn btn-dark"
-                    type="button" onclick="descobreDigitoVerificadorConta()">Verificar</button>
+                <button type="button"  class="btn btn-dark" onclick="descobreDigitoVerificadorConta()">Verificar</button>
             </div>
-            <!-- Modal -->
-            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
-                aria-labelledby="staticBackdropLabel" aria-hidden="true">
-                <div class="modal-dialog">
-                    <div class="modal-content">
-                        <div class="modal-header">
-                            <!-- <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>-->
-                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                        </div>
-                        <div class="modal-body" id="div">
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
-                        </div>
-                    </div>
-                </div>
+            <div class="alert alert-success mt-4" id="resposta" role="alert" style="display: none;">
             </div>
         </div>
     </div>
@@ -96,6 +83,7 @@
         let digitoVerificador;
 
 
+
         if (selectBox == 1) {
             digitoVerificador = verificaDigitoBancoBrasil(arrayConta);
         }
@@ -104,15 +92,18 @@
             digitoVerificador = verificaDigitoBradesco(arrayConta);
         }
 
-        if (selectBox == 3) {
+        let agenciaValida = validaInputAgenciaAlertaAgencia(arrayAgencia,4);
+        
+
+        if (agenciaValida && selectBox == 3) {
             digitoVerificador = verificaDigitoCaixa(arrayConta, arrayAgencia);
         }
 
-        if (selectBox == 4) {
+        if (agenciaValida && selectBox == 4) {
             digitoVerificador = verificaDigitoItau(arrayConta, arrayAgencia);
         }
 
-        div.innerHTML = "O dígito da conta corrente informa é " + digitoVerificador;
+        resposta(digitoVerificador);
 
     }
 
@@ -202,6 +193,43 @@
         }
         return soma;
     }
+
+    function validaInputAgenciaAlertaAgencia(arrayAgencia, digitosAgencia) {
+        if (arrayAgencia.length < digitosAgencia) {
+            let alerta = document.getElementById('alerta-agencia');
+            alerta.style.display = 'block';
+            alerta.innerHTML = "É necessário preencher o campo Agência !"
+            return false;
+        }
+        return true;
+    }
+
+    function resposta(digitoVerificador){
+        if(digitoVerificador != undefined){
+        let alerta = document.getElementById('alerta-agencia').style.display = 'none';
+        let resposta = document.getElementById('resposta');
+        let selectBox = document.getElementById("select-banco");
+        let contaCorrente = document.getElementById("input-conta-corrente");
+        let agencia = document.getElementById("input-agencia");
+        resposta.style.display = 'block';
+        resposta.innerHTML = "O dígito da conta corrente informada é " + digitoVerificador;
+        selectBox.value = 0;
+        contaCorrente.value = " ";
+        agencia.value = " ";
+        }
+    }
+
+    function zeraTodosOsCampos(){
+        let alerta = document.getElementById('alerta-agencia').style.display = 'none';
+        let resposta = document.getElementById('resposta').style.display = 'none';
+        let selectBox = document.getElementById("select-banco");
+        let contaCorrente = document.getElementById("input-conta-corrente");
+        let agencia = document.getElementById("input-agencia");
+        selectBox.value = 0;
+        contaCorrente.value = " ";
+        agencia.value = " ";
+    }
+
 </script>
 
 </html>

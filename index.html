@@ -12,6 +12,8 @@
     <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/js/bootstrap.bundle.min.js"
         integrity="sha384-OERcA2EqjJCMA+/3y+gxIOqMEjwtxJY7qPCqsdltbNJuaOe923+mo//f6V8Qbsw3"
         crossorigin="anonymous"></script>
+        <script src="https://code.jquery.com/jquery-3.6.1.min.js" integrity="sha256-o88AwQnZB+VDvE9tvIXrMQaPlFFSUTR+nldQm1LuPXQ=" crossorigin="anonymous"></script>
+        <script src="js/validadores.js"></script>
     <title>Validador Bancário</title>
 </head>
 
@@ -35,7 +37,7 @@
             </li>
         </ul>
         <div class="container col-8 mt-4">
-            <select class="form-select" id="select-banco" aria-label="Default select example">
+            <select class="form-select" id="select-banco" aria-label="Default select example" onblur="verificaBancoSelecionado()">
                 <option selected>Selecione o banco</option>
                 <option value="1">Banco do Brasil</option>
                 <option value="2">Bradesco</option>
@@ -43,36 +45,33 @@
                 <option value="4">Itaú</option>
             </select>
             <div class="row g-2 mt-4">
-                <div class="col-md">
+                <div class="col-md" id="div-agencia" style="display: none;">
                     <div class="form-floating">
-                        <input type="text" class="form-control" id="input-agencia">
+                        <input type="number" id="input-agencia" class="form-control" onblur="verificaInputAgencia()">
                         <label for="floatingInputGrid">Agência</label>
                     </div>
                 </div>
                 <div class="col-md">
                     <div class="form-floating">
-                        <input type="text" class="form-control" id="input-conta-corrente">
+                        <input type="number" class="form-control" id="input-conta-corrente" onblur="verificaInputContaCorrente()" >
                         <label for="floatingInputGrid">Conta Corrente</label>
                     </div>
                 </div>
             </div>
             <div class="d-grid gap-2 col-12 mx-auto mt-4">
-                <button type="button" data-bs-toggle="modal" data-bs-target="#staticBackdrop" class="btn btn-dark"
-                    type="button" onclick="descobreDigitoVerificadorConta()">Verificar</button>
+                <button type="button" class="btn btn-dark" id="botao" onclick="descobreDigitoVerificadorConta()">Verificar</button>
+            </div>
+            <div class="alert alert-danger mt-4" id="alerta-agencia" role="alert" style="display: none;">
             </div>
             <!-- Modal -->
-            <div class="modal fade" id="staticBackdrop" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
+            <div class="modal fade" id="myModal" data-bs-backdrop="static" data-bs-keyboard="false" tabindex="-1"
                 aria-labelledby="staticBackdropLabel" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <!-- <h1 class="modal-title fs-5" id="staticBackdropLabel">Modal title</h1>-->
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body" id="div">
-                        </div>
-                        <div class="modal-footer">
-                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Close</button>
                         </div>
                     </div>
                 </div>
@@ -84,124 +83,4 @@
 
 
 </body>
-<script>
-    function descobreDigitoVerificadorConta() {
-        let selectBox = document.getElementById("select-banco").value;
-        let contaCorrente = document.getElementById("input-conta-corrente").value;
-        let agencia = document.getElementById("input-agencia").value;
-        let arrayConta = contaCorrente.split("");
-        let arrayAgencia = agencia.split("");
-        apagaPosicaoVazia(arrayConta);
-        apagaPosicaoVazia(arrayAgencia);
-        let digitoVerificador;
-
-
-        if (selectBox == 1) {
-            digitoVerificador = verificaDigitoBancoBrasil(arrayConta);
-        }
-
-        if (selectBox == 2) {
-            digitoVerificador = verificaDigitoBradesco(arrayConta);
-        }
-
-        if (selectBox == 3) {
-            digitoVerificador = verificaDigitoCaixa(arrayConta, arrayAgencia);
-        }
-
-        if (selectBox == 4) {
-            digitoVerificador = verificaDigitoItau(arrayConta, arrayAgencia);
-        }
-
-        div.innerHTML = "O dígito da conta corrente informa é " + digitoVerificador;
-
-    }
-
-    function verificaDigitoBradesco(arrayConta) {
-        arrayConta = arrayConta.length < 8 ?
-            adicionaNumerosNaConta(8, arrayConta) : arrayConta;
-        console.log(arrayConta);
-        let arrayMultiplicadores = [3, 2, 7, 6, 5, 4, 3, 2];
-        let somaTotal = somaNumeros(arrayConta, arrayMultiplicadores);
-        console.log("Soma total: " + somaTotal);
-        let modulo = (somaTotal % 11);
-        if (modulo == 0) return 0;
-        if (modulo == 1) return "P";
-        return (11 - modulo);
-    }
-
-    function verificaDigitoBancoBrasil(arrayConta) {
-        let arrayMultiplicadores = [9, 8, 7, 6, 5, 4, 3, 2];
-        arrayConta = arrayConta.length < 8 ?
-            adicionaNumerosNaConta(8, arrayConta) : arrayConta;
-        let somaTotal = somaNumeros(arrayConta, arrayMultiplicadores);
-        let modulo = 11 - (somaTotal % 11);
-        if (modulo == 10) return 0;
-        if (modulo == 11) return "X";
-        return modulo;
-    }
-
-    function verificaDigitoCaixa(arrayConta, arrayAgencia) {
-        let arrayMultiplicadores = [8, 7, 6, 5, 4, 3, 2, 9, 8, 7, 6, 5, 4, 3, 2];
-        arrayConta = arrayConta.length < 11 ?
-            adicionaNumerosNaConta(11, arrayConta) : arrayConta;
-        let arrayFinal = arrayAgencia.concat(arrayConta);
-
-        let somaTotal = somaNumeros(arrayFinal, arrayMultiplicadores);
-        let somaFinal = (somaTotal * 10);
-        let modulo = parseInt((somaFinal / 11), 10) * 11;
-        let valorFinal = somaFinal - modulo;
-        if (valorFinal == 10) return 0;
-        return valorFinal;
-    }
-
-    function verificaDigitoItau(arrayConta, arrayAgencia) {
-        let somaTotal = 0;
-        let arrayMultiplicadores = [2, 1, 2, 1, 2, 1, 2, 1, 2];
-        arrayConta = arrayConta.length < 5 ?
-            adicionaNumerosNaConta(5, arrayConta) : arrayConta;
-        let arrayFinal = arrayAgencia.concat(arrayConta);
-        for (i = 0; i < arrayFinal.length; i++) {
-            let numero = parseInt(arrayFinal[i]) * arrayMultiplicadores[i];
-            console.log(numero);
-            somaTotal += numero > 9 ? splitInteiro(numero) : numero;
-
-        }
-        let valorFinal = 10 - (somaTotal % 10);
-        if (valorFinal == 10) return 0;
-        return valorFinal;
-
-    }
-
-
-    function splitInteiro(numero) {
-        return parseInt((numero / 10), 10) + numero % 10;
-    }
-
-    function apagaPosicaoVazia(array) {
-        let posicaoVazia = " ";
-        let indice = array.indexOf(posicaoVazia);
-        while (indice >= 0) {
-            array.splice(indice, 1);
-            indice = array.indexOf(posicaoVazia);
-        }
-    }
-
-    function adicionaNumerosNaConta(qtdNumerosConta, arrayConta) {
-        for (i = qtdNumerosConta - arrayConta.length; i > 0; i--) {
-            arrayConta.unshift(0);
-        }
-        console.log("Passou no adiciona: " + arrayConta);
-        return arrayConta;
-    }
-
-    function somaNumeros(arrayFinal, arrayMultiplicadores) {
-        let soma = 0;
-        for (i = 0; i < arrayFinal.length; i++) {
-            soma += parseInt(arrayFinal[i]) * arrayMultiplicadores[i];
-            console.log(soma)
-        }
-        return soma;
-    }
-</script>
-
 </html>

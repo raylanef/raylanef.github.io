@@ -108,7 +108,7 @@ function apagaPosicaoVazia(array) {
 }
 
 function adicionaNumerosNaConta(qtdNumerosConta, arrayConta) {
-    for (i = qtdNumerosConta - arrayConta.length; i > 0; i--) {
+    for (let i = qtdNumerosConta - arrayConta.length; i > 0; i--) {
         arrayConta.unshift(0);
     }
     console.log("Passou no adiciona: " + arrayConta);
@@ -117,7 +117,7 @@ function adicionaNumerosNaConta(qtdNumerosConta, arrayConta) {
 
 function somaNumeros(arrayFinal, arrayMultiplicadores) {
     let soma = 0;
-    for (i = 0; i < arrayFinal.length; i++) {
+    for (let i = 0; i < arrayFinal.length; i++) {
         soma += parseInt(arrayFinal[i]) * arrayMultiplicadores[i];
         console.log(soma)
     }
@@ -180,5 +180,12 @@ function verificaInputContaCorrente(){
     }
     escondeAlert();
     desabilitaBotao(false);
+}
+
+
+function tabVerificaBanco(){
+    console.log("chamou a funcao")
+    let input= document.getElementById('input-digito');
+    input.style.display = 'block';
 }
 

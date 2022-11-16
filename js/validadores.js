@@ -184,8 +184,9 @@ function verificaInputContaCorrente(){
 
 
 function tabVerificaBanco(){
-    console.log("chamou a funcao")
+    let inputAgencia = document.getElementById('div-agencia');
     let input= document.getElementById('input-digito');
     input.style.display = 'block';
+    inputAgencia.style.display = 'block';
 }
 

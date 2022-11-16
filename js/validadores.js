@@ -30,6 +30,10 @@ function descobreDigitoVerificadorConta() {
             exibeMensagemErro("Banco não selecionado");
     }
 
+    if(isNaN(digitoVerificador) || digitoVerificador == undefined){
+        return exibeMensagemErro("Deu ruim :(");
+    }
+
     if (digitoVerificador != undefined) {
         let mensagem = `O dígito da conta corrente informada é ${digitoVerificador} <br>
                          <b>Conta Corrente:</b> ${contaCorrente}-${digitoVerificador} <br>`;

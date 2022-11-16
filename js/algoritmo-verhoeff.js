@@ -1,18 +1,4 @@
-<!DOCTYPE html>
-<html lang="en">
 
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Teste</title>
-</head>
-
-<body>
-    <button onclick="teste()">teste</button>
-
-</body>
-<script>
 
     const linha = [0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2];
     const tabelaDigitoVerificador = [0, 4, 3, 2, 1, 5, 6, 7, 8, 9];
@@ -43,32 +29,12 @@
 
 
 
-    function teste() {
-        // let contaCorrente = [2, 4, 6, 8, 0, 1, 9, 7, 5, 3];
-
-        //conta gadelha(6)
-        //let contaCorrente =[1,4,0,6,2,4]
-        //conta wryel (4)
-        // let contaCorrente =[8,3,1,1,8,7,5]
-        //conta felipe (0)
-        //let contaCorrente =[2,6,2,4,3,9,3]
-        //conta john (6)
-        //let contaCorrente =[7,1,4,9,1,4,7,5]
-        //conta raylane (6)
-        //  let contaCorrente = [8,4,2,1,7,6,3,1]
-        //conta railson (3)
-        //let contaCorrente = [8,9,8,5,2,6,4,2]
-        //suricate (5)
-        let contaCorrente = [2, 3, 5, 3, 5, 4, 1];
-
+    function verificaDigitoNubank(contaCorrente) {
         let coluna = criaColuna(contaCorrente);
         let indicesLocalizacao = obterValoresLocalizacao(linha, coluna, tabelaLocalizacao);
         let coordenadas = obterCoordenadasTabelaDigitoVerificador(coluna, indicesLocalizacao);
 
-        //return obterDigitoVerificador(coordenadas);
-        console.log(obterDigitoVerificador(coordenadas));
-
-        
+        return obterDigitoVerificador(coordenadas);       
     }
 
     function criaColuna(array) {
@@ -114,7 +80,3 @@
         let indiceDigito = coordenadas[coordenadas.length - 1];
         return tabelaDigitoVerificador[indiceDigito];
     }
-
-</script>
-
-</html>

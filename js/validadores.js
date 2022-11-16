@@ -23,6 +23,9 @@ function descobreDigitoVerificadorConta() {
         case "4":
             digitoVerificador = verificaDigitoItau(arrayConta, arrayAgencia);
             break;
+        case "5":
+            digitoVerificador = verificaDigitoNubank(arrayConta);
+            break;
         default:
             exibeMensagemErro("Banco não selecionado");
     }

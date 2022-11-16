@@ -100,10 +100,11 @@
 
         for (i = 0; i < coluna.length - 1; i++) {
             let indice = i + 1;
-            let col = indicesLocalizacao[indice];
-            let li = valorVerificacao[i];
-
             valorVerificacao[indice] = indiceVerificador[i];
+            
+            let col = indicesLocalizacao[indice];
+            let li = valorVerificacao[indice];
+    
             indiceVerificador[indice] = tabelaIndiceInversao[li][col];
         }
         return indiceVerificador;

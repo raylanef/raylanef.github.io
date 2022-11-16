@@ -13,7 +13,10 @@
 
 </body>
 <script>
+
     const linha = [0, 1, 2, 3, 4, 5, 6, 7, 0, 1, 2];
+    const tabelaDigitoVerificador = [0, 4, 3, 2, 1, 5, 6, 7, 8, 9];
+
     const tabelaLocalizacao = [
         [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
         [1, 5, 7, 6, 2, 8, 3, 0, 9, 4],
@@ -26,47 +29,49 @@
     ];
 
     const tabelaIndiceInversao = [
-        [0,1,2,3,4,5,6,7,8,9],
-        [1,2,3,4,0,6,7,8,9,5],
-        [2,3,4,0,1,7,8,9,5,6],
-        [3,4,0,1,2,8,9,5,6,7],
-        [4,0,1,2,3,9,5,6,7,8],
-        [5,9,8,7,6,0,4,3,2,1],
-        [6,5,9,8,7,1,0,4,3,2],
-        [7,6,5,9,8,2,1,0,4,3],
-        [8,7,6,5,9,3,2,1,0,4],
-        [9,8,7,6,5,4,3,2,1,0]
+        [0, 1, 2, 3, 4, 5, 6, 7, 8, 9],
+        [1, 2, 3, 4, 0, 6, 7, 8, 9, 5],
+        [2, 3, 4, 0, 1, 7, 8, 9, 5, 6],
+        [3, 4, 0, 1, 2, 8, 9, 5, 6, 7],
+        [4, 0, 1, 2, 3, 9, 5, 6, 7, 8],
+        [5, 9, 8, 7, 6, 0, 4, 3, 2, 1],
+        [6, 5, 9, 8, 7, 1, 0, 4, 3, 2],
+        [7, 6, 5, 9, 8, 2, 1, 0, 4, 3],
+        [8, 7, 6, 5, 9, 3, 2, 1, 0, 4],
+        [9, 8, 7, 6, 5, 4, 3, 2, 1, 0]
     ];
 
-    const digitoVerificador = [0,4,3,2,1,5,6,7,8,9];
+
 
     function teste() {
-       // let contaCorrente = [2, 4, 6, 8, 0, 1, 9, 7, 5, 3];
-        // let contaCorrente = [0,0,1,8,4,2,1,7,6,3,1]
-        let contaCorrente = [0,0,1,7,1,4,9,1,4,7,5]
-        let coluna = inverteArrayConta(contaCorrente);
-        let iLocalizacao = indicesLocalizacao(linha, coluna, tabelaLocalizacao);
+        // let contaCorrente = [2, 4, 6, 8, 0, 1, 9, 7, 5, 3];
 
-        let valorVerificacao = [0];
-        let indiceVerificador = [0];
+        //conta gadelha(6)
+        //let contaCorrente =[1,4,0,6,2,4]
+        //conta wryel (4)
+        // let contaCorrente =[8,3,1,1,8,7,5]
+        //conta felipe (0)
+        //let contaCorrente =[2,6,2,4,3,9,3]
+        //conta john (6)
+        //let contaCorrente =[7,1,4,9,1,4,7,5]
+        //conta raylane (6)
+        //  let contaCorrente = [8,4,2,1,7,6,3,1]
+        //conta railson (3)
+        //let contaCorrente = [8,9,8,5,2,6,4,2]
+        //suricate (5)
+        let contaCorrente = [2, 3, 5, 3, 5, 4, 1];
 
-        for (i = 0; i < 10; i++) {
-            valorVerificacao[i+1] = indiceVerificador[i];
-            let col = iLocalizacao[i+1];
-            let li = valorVerificacao[i+1];
-            indiceVerificador[i+1] = tabelaIndiceInversao[li][col];
-        }
+        let coluna = criaColuna(contaCorrente);
+        let indicesLocalizacao = obterValoresLocalizacao(linha, coluna, tabelaLocalizacao);
+        let coordenadas = obterCoordenadasTabelaDigitoVerificador(coluna, indicesLocalizacao);
 
-        console.log(indiceVerificador);
-        let indiceDigito = indiceVerificador[10];
-        console.log("indice final: " + indiceDigito)
-        let digito = digitoVerificador[indiceDigito];
-        console.log("digito verificador: " + digito);
+        //return obterDigitoVerificador(coordenadas);
+        console.log(obterDigitoVerificador(coordenadas));
 
-
+        
     }
 
-    function inverteArrayConta(array) {
+    function criaColuna(array) {
         let arrayInvertido = [];
         let index = 0;
         while (index < array.length) {
@@ -76,15 +81,37 @@
         return arrayInvertido;
     }
 
-    function indicesLocalizacao(linha, coluna, tabelaLocalizacao) {
+    function obterValoresLocalizacao(linha, coluna, tabelaLocalizacao) {
         let indices = [];
-        for (i = 0; i < 11; i++) {
+        for (i = 0; i < coluna.length; i++) {
             let li = linha[i];
             let col = coluna[i];
             let indice = tabelaLocalizacao[li][col];
             indices.push(indice);
         }
         return indices;
+    }
+
+    function obterCoordenadasTabelaDigitoVerificador(coluna, indicesLocalizacao) {
+        
+        let valorVerificacao = [0];
+        let indiceVerificador = [0];
+        
+
+        for (i = 0; i < coluna.length - 1; i++) {
+            let indice = i + 1;
+            let col = indicesLocalizacao[indice];
+            let li = valorVerificacao[i];
+
+            valorVerificacao[indice] = indiceVerificador[i];
+            indiceVerificador[indice] = tabelaIndiceInversao[li][col];
+        }
+        return indiceVerificador;
+    }
+
+    function obterDigitoVerificador(coordenadas){
+        let indiceDigito = coordenadas[coordenadas.length - 1];
+        return tabelaDigitoVerificador[indiceDigito];
     }
 
 </script>
